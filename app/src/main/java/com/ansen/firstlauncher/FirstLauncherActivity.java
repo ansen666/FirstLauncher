@@ -196,7 +196,7 @@ public class FirstLauncherActivity extends AppCompatActivity{
      * 跳转到首页
      */
     private void gotoMain(){
-//        setFirstLauncherBoolean();
+        setFirstLauncherBoolean();
 
         Intent intent=new Intent(FirstLauncherActivity.this,MainActivity.class);
         startActivity(intent);
