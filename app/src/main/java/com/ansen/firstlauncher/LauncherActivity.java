@@ -8,12 +8,13 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 
 /**
+ * 启动页
  * Created by  ansen
  * Create Time 2017-07-14
  */
 public class LauncherActivity extends AppCompatActivity {
     public static final String  FIRST_LAUNCHER="first_launcher";//是否第一次启动
-    private final long waitTime = 1000;
+    private final long waitTime = 1000;//1秒
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
