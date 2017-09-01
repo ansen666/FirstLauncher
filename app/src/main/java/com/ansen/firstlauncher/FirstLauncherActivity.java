@@ -24,10 +24,11 @@ import java.util.List;
  * Create Time 2017-07-14
  */
 public class FirstLauncherActivity extends AppCompatActivity{
-    private final int MAX_POINT = 3;
     private ViewPager viewPager;
-    private List<View> mImageViews = new ArrayList<>();//要显示图片
-    private List<ImageView> tips=new ArrayList<>();// 要显示点点点
+    //图片数组
+    private int[] images=new int[]{R.mipmap.bg_launcher_one,R.mipmap.bg_launcher_two,R.mipmap.bg_launcher_three};
+    private List<View> mImageViews = new ArrayList<>();//要显示图片View
+    private List<ImageView> tips=new ArrayList<>();// 要显示点点点View
     private ViewGroup group;
 
     private EdgeEffectCompat rightEdge;
@@ -40,7 +41,6 @@ public class FirstLauncherActivity extends AppCompatActivity{
         setContentView(R.layout.activity_first_launcher);
 
         group = (ViewGroup) findViewById(R.id.viewGroup);
-
         viewPager = (ViewPager) findViewById(R.id.viewPager);
         tvGotoMain= (TextView) findViewById(R.id.tv_goto_main);
 
@@ -55,24 +55,16 @@ public class FirstLauncherActivity extends AppCompatActivity{
         }
 
         // 将图片装载到数组中
-        for (int i = 0; i < MAX_POINT; i++) {
+        for (int i = 0; i < images.length; i++) {
             ImageView imageView = new ImageView(this);
             imageView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            if (i == 0) {
-                imageView.setImageResource(R.mipmap.bg_launcher_one);
-                mImageViews.add(imageView);
-            } else if (i == 1) {
-                imageView.setImageResource(R.mipmap.bg_launcher_two);
-                mImageViews.add(imageView);
-            } else if (i == 2) {
-                imageView.setImageResource(R.mipmap.bg_launcher_three);
-                mImageViews.add(imageView);
-            }
+            imageView.setImageResource(images[i]);
+            mImageViews.add(imageView);
         }
 
         // 将点点加入到ViewGroup中
-        for (int i = 0; i < MAX_POINT; i++) {
+        for (int i = 0; i < images.length; i++) {
             ImageView imageView = new ImageView(this);
             imageView.setLayoutParams(new ViewGroup.LayoutParams(10, 10));
             if (i == 0) {
@@ -82,16 +74,14 @@ public class FirstLauncherActivity extends AppCompatActivity{
             }
             tips.add(imageView);
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-            layoutParams.leftMargin = 10;
-            layoutParams.rightMargin = 10;
+            layoutParams.leftMargin = 10;//左边距
+            layoutParams.rightMargin = 10;//右边距
             group.addView(imageView,layoutParams);
         }
 
-        // 设置Adapter
-        viewPager.setAdapter(new PreviewImageAdapter());
+        viewPager.setAdapter(new PreviewImageAdapter());// 设置Adapter
         viewPager.setOffscreenPageLimit(2);
         viewPager.addOnPageChangeListener(onPageChangeListener);// 设置监听，主要是设置点点的背景
-        viewPager.setCurrentItem(0);
 
         tvGotoMain.setOnClickListener(onClickListener);
     }
@@ -113,7 +103,7 @@ public class FirstLauncherActivity extends AppCompatActivity{
 
         @Override
         public void onPageSelected(int position){
-            if(position==2){
+            if(position==images.length-1){//最后一页
                 tvGotoMain.setVisibility(View.VISIBLE);
             }else{
                 tvGotoMain.setVisibility(View.INVISIBLE);
@@ -167,21 +157,22 @@ public class FirstLauncherActivity extends AppCompatActivity{
             }
         }
 
-        /**
-         * 载入图片进去，用当前的position 除以 图片数组长度取余数是关键
-         */
         @Override
         public Object instantiateItem(View container, int position) {
             ((ViewPager) container).addView(mImageViews.get(position));
             return mImageViews.get(position);
         }
-
-        @Override
-        public int getItemPosition(Object object) {
-            return POSITION_NONE;
-        }
     }
 
+    /**
+     * 跳转到首页
+     */
+    private void gotoMain(){
+        setFirstLauncherBoolean();
+        Intent intent=new Intent(FirstLauncherActivity.this,MainActivity.class);
+        startActivity(intent);
+        finish();
+    }
 
     /**
      * 第一次启动执行完成  值设置成true
@@ -191,17 +182,5 @@ public class FirstLauncherActivity extends AppCompatActivity{
         SharedPreferences.Editor edit=sp.edit();
         edit.putBoolean(LauncherActivity.FIRST_LAUNCHER,true);
         edit.commit();
-    }
-
-    /**
-     * 跳转到首页
-     */
-    private void gotoMain(){
-        setFirstLauncherBoolean();
-
-        Intent intent=new Intent(FirstLauncherActivity.this,MainActivity.class);
-        startActivity(intent);
-
-        finish();
     }
 }
